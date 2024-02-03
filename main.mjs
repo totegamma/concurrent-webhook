@@ -29,7 +29,6 @@ webhooks.forEach(webhook => {
             await client.createCurrent(
                 result,
                 webhook.postStreams,
-                {},
                 {
                     profileOverride: webhook.profileOverride
                 }
