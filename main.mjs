@@ -26,7 +26,14 @@ webhooks.forEach(webhook => {
                 res.status(200).send("OK")
                 return
             }
-            await client.createCurrent(result, webhook.postStreams, {}, webhook.profileOverride);
+            await client.createCurrent(
+                result,
+                webhook.postStreams,
+                {},
+                {
+                    profileOverride: webhook.profileOverride
+                }
+            );
             res.status(200).send("OK")
         } catch (error) {
             console.error(error)
