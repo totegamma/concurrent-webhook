@@ -7,7 +7,8 @@ import { Client } from "@concurrent-world/client";
 const privateKey = process.env.CONCURRENT_PRIVATE_KEY;
 const host = process.env.CONCURRENT_HOST;
 const clientSig =  process.env.CONCURRENT_SIG || "concurrent-webhook-bridge";
-const client = new Client(privateKey, host, clientSig);
+
+const client = await Client.create(privateKey, host, clientSig);
 
 const app = express()
 app.use(cors())
@@ -26,7 +27,7 @@ webhooks.forEach(webhook => {
                 res.status(200).send("OK")
                 return
             }
-            await client.createCurrent(
+            await client.createMarkdownCrnt(
                 result,
                 webhook.postStreams,
                 {
