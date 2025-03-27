@@ -2,13 +2,12 @@ import express from "express"
 import ejs from "ejs"
 import cors from "cors"
 
-import { Client } from "@concurrent-world/client";
+import { Client, Schemas } from "@concrnt/worldlib";
 
 const privateKey = process.env.CONCURRENT_PRIVATE_KEY;
 const host = process.env.CONCURRENT_HOST;
-const clientSig =  process.env.CONCURRENT_SIG || "concurrent-webhook-bridge";
 
-const client = await Client.create(privateKey, host, clientSig);
+const client = await Client.create(privateKey, host);
 
 const app = express()
 app.use(cors())
@@ -27,13 +26,14 @@ webhooks.forEach(webhook => {
                 res.status(200).send("OK")
                 return
             }
-            await client.createMarkdownCrnt(
-                result,
-                webhook.postStreams,
+            client.api.createMessage(
+                webhook.schema || Schemas.markdownMessage,
                 {
-                    profileOverride: webhook.profileOverride
-                }
-            );
+                    body: result,
+                    profileOverride: webhook.profileOverride,
+                },
+                webhook.postStreams
+            )
             res.status(200).send("OK")
         } catch (error) {
             console.error(error)
